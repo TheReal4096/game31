@@ -6345,7 +6345,14 @@ hr {
 
   .heading {
     margin-bottom: 10px; }
-
+    
+  .restart-button {
+    width: 42%;
+    padding: 0;
+    display: block;
+    box-sizing: border-box;
+    margin-top: 2px; }
+    
   .game-container {
     margin-top: 40px;
     position: relative;
