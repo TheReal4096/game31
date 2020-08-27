@@ -1,7 +1,7 @@
-function GameManager(size, InputManager, Actuator, ScoreManager) {
+function GameManager(size, InputManager, Actuator, StorageManager) {
     this.size = size; // Size of the grid
     this.inputManager = new InputManager;
-    this.scoreManager = new ScoreManager;
+    this.storageManager = new StorageManager;
     this.actuator = new Actuator;
 
     this.startTiles = 2;
@@ -40,7 +40,7 @@ GameManager.prototype.setup = function () {
     this.grid = new Grid(this.size);
 
     this.score = 0;
-    this.highestTile = 5;
+    this.highestTile = 10;
     this.over = false;
     this.won = false;
     this.keepPlaying = false;
@@ -71,8 +71,8 @@ GameManager.prototype.addRandomTile = function () {
 
 // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
-    if (this.scoreManager.get() < this.score) {
-        this.scoreManager.set(this.score);
+    if (this.storageManager.get() < this.score) {
+        this.storageManager.set(this.score);
     }
 
     this.actuator.actuate(this.grid, {
@@ -80,7 +80,7 @@ GameManager.prototype.actuate = function () {
         highest: this.highestTile,
         over: this.over,
         won: this.won,
-        bestScore: this.scoreManager.get(),
+        bestScore: this.storageManager.get(),
         terminated: this.isGameTerminated()
     });
 
@@ -164,7 +164,7 @@ GameManager.prototype.move = function (direction) {
                     if (merged.value > self.highestTile) self.highestTile = merged.value;
 
                     // The mighty 2048 tile
-                    if (merged.value === 0.5) self.won = true;
+                    if (merged.value === Goal) self.won = true;
                 } else if (next && next.value === tile.value && !next.mergedFrom && next.value != 1 && next.value != 2 && next.value != 3 && next.value != 4) {
  
                     var merged = new Tile(positions.next, tile.value * 2);
@@ -184,7 +184,7 @@ GameManager.prototype.move = function (direction) {
                     if (merged.value > self.highestTile) self.highestTile = merged.value;
 
                     // The mighty 2048 tile
-                    if (merged.value === 0.5) self.won = true;
+                    if (merged.value === Goal) self.won = true;
                 } else if (!tile.merged) {
                     self.moveTile(tile, positions.farthest);
                 }
